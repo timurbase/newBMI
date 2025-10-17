@@ -1,0 +1,289 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ lesson.title }} - {{ course.title }}{% endblock %}
+
+{% block content %}
+
+<section class="min-h-screen px-4 py-20">
+    <div class="container mx-auto">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            
+            <!-- Sidebar - Lessons List -->
+            <div class="lg:col-span-1">
+                <div class="glass rounded-2xl p-4 sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto">
+                    <!-- Back Button -->
+                    <a href="{% url 'course_detail' course.slug %}" class="btn btn-ghost btn-sm text-white mb-4 w-full justify-start">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                        Курсга қайтиш
+                    </a>
+                    
+                    <h3 class="text-white font-bold mb-4">Дарслар рўйхати</h3>
+                    
+                    <!-- Lessons List -->
+                    <div class="space-y-2">
+                        {% for lesson_item in all_lessons %}
+                        <a href="{% url 'lesson_view' course.slug lesson_item.id %}" 
+                           class="flex items-start gap-3 p-3 rounded-lg transition-all {% if lesson_item.id == lesson.id %}bg-blue-500/20 border border-blue-500{% else %}hover:bg-white/5{% endif %}">
+                            <!-- Icon -->
+                            <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                                {% if lesson_item.lesson_type == 'video' %}
+                                    <i data-lucide="play-circle" class="w-4 h-4 text-blue-400"></i>
+                                {% elif lesson_item.lesson_type == 'text' %}
+                                    <i data-lucide="file-text" class="w-4 h-4 text-green-400"></i>
+                                {% elif lesson_item.lesson_type == 'quiz' %}
+                                    <i data-lucide="help-circle" class="w-4 h-4 text-yellow-400"></i>
+                                {% else %}
+                                    <i data-lucide="code" class="w-4 h-4 text-purple-400"></i>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Info -->
+                            <div class="flex-1">
+                                <p class="text-white text-sm font-medium line-clamp-2">{{ lesson_item.title }}</p>
+                                <p class="text-xs text-gray-400">{{ lesson_item.duration_minutes }} дақиқа</p>
+                            </div>
+                            
+                            <!-- Status -->
+                            {% if lesson_item.id == lesson.id %}
+                                <i data-lucide="play" class="w-4 h-4 text-blue-400 flex-shrink-0"></i>
+                            {% endif %}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="lg:col-span-3 space-y-6">
+                
+                <!-- Lesson Header -->
+                <div class="glass rounded-2xl p-6" data-aos="fade-up">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                        <div>
+                            <div class="badge badge-sm glass mb-2">
+                                {{ lesson.module.title }}
+                            </div>
+                            <h1 class="text-2xl md:text-3xl font-bold text-white">{{ lesson.title }}</h1>
+                        </div>
+                        
+                        <!-- XP Reward -->
+                        <div class="badge badge-lg badge-success">
+                            <i data-lucide="zap" class="w-4 h-4 mr-1"></i>
+                            +{{ lesson.xp_reward }} XP
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Video Player (if video lesson) -->
+                {% if lesson.lesson_type == 'video' %}
+                <div class="glass rounded-2xl overflow-hidden" data-aos="fade-up">
+                    <div class="aspect-video bg-black relative">
+                        {% if lesson.video_url %}
+                            <!-- YouTube/Vimeo Embed -->
+                            <iframe 
+                                class="w-full h-full"
+                                src="{{ lesson.video_url }}"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen
+                            ></iframe>
+                        {% else %}
+                            <!-- Placeholder -->
+                            <div class="w-full h-full flex flex-col items-center justify-center text-white">
+                                <i data-lucide="video" class="w-20 h-20 mb-4 text-gray-400"></i>
+                                <p class="text-gray-400">Видео юкланмоқда...</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Lesson Content -->
+                <div class="glass rounded-2xl p-8" data-aos="fade-up">
+                    <h2 class="text-2xl font-bold text-white mb-6">
+                        {% if lesson.lesson_type == 'text' %}
+                            📄 Дарс матни
+                        {% elif lesson.lesson_type == 'quiz' %}
+                            ❓ Квиз
+                        {% elif lesson.lesson_type == 'code' %}
+                            💻 Код машқи
+                        {% else %}
+                            📝 Назария
+                        {% endif %}
+                    </h2>
+                    
+                    <!-- Content -->
+                    <div class="prose prose-invert max-w-none">
+                        {{ lesson.content|linebreaks }}
+                    </div>
+                    
+                    <!-- Code Editor (if code lesson) -->
+                    {% if lesson.lesson_type == 'code' %}
+                    <div class="mt-8">
+                        <h3 class="text-xl font-bold text-white mb-4">Код ёзинг:</h3>
+                        <div class="bg-gray-900 rounded-lg p-4">
+                            <textarea 
+                                id="code-editor"
+                                class="w-full h-64 bg-gray-800 text-white font-mono p-4 rounded border border-gray-700 focus:outline-none focus:border-blue-500"
+                                placeholder="# Ўз кодингизни ёзинг..."
+                            ></textarea>
+                            
+                            <div class="flex gap-3 mt-4">
+                                <button onclick="runCode()" class="btn btn-primary-custom text-white">
+                                    <i data-lucide="play" class="w-4 h-4"></i>
+                                    Ишга туширинг
+                                </button>
+                                <button onclick="resetCode()" class="btn glass text-white">
+                                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                                    Тозалаш
+                                </button>
+                            </div>
+                            
+                            <!-- Output -->
+                            <div class="mt-4 bg-gray-800 rounded p-4 min-h-[100px]">
+                                <p class="text-gray-400 text-sm mb-2">Натижа:</p>
+                                <pre id="code-output" class="text-white font-mono text-sm"></pre>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Quiz (if quiz lesson) -->
+                    {% if lesson.lesson_type == 'quiz' %}
+                    <div class="mt-8 space-y-6">
+                        <h3 class="text-xl font-bold text-white mb-4">Саволлар:</h3>
+                        
+                        <!-- Sample Questions -->
+                        <div class="space-y-4">
+                            <div class="p-6 glass rounded-xl">
+                                <p class="text-white font-semibold mb-4">1. Python нима?</p>
+                                <div class="space-y-2">
+                                    <label class="flex items-center gap-3 p-3 glass rounded-lg cursor-pointer hover:bg-white/10">
+                                        <input type="radio" name="q1" class="radio radio-primary" />
+                                        <span class="text-white">Дастурлаш тили</span>
+                                    </label>
+                                    <label class="flex items-center gap-3 p-3 glass rounded-lg cursor-pointer hover:bg-white/10">
+                                        <input type="radio" name="q1" class="radio radio-primary" />
+                                        <span class="text-white">Илон</span>
+                                    </label>
+                                    <label class="flex items-center gap-3 p-3 glass rounded-lg cursor-pointer hover:bg-white/10">
+                                        <input type="radio" name="q1" class="radio radio-primary" />
+                                        <span class="text-white">Операцион тизим</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="p-6 glass rounded-xl">
+                                <p class="text-white font-semibold mb-4">2. print() функцияси нима қилади?</p>
+                                <div class="space-y-2">
+                                    <label class="flex items-center gap-3 p-3 glass rounded-lg cursor-pointer hover:bg-white/10">
+                                        <input type="radio" name="q2" class="radio radio-primary" />
+                                        <span class="text-white">Маълумотни чоп этади</span>
+                                    </label>
+                                    <label class="flex items-center gap-3 p-3 glass rounded-lg cursor-pointer hover:bg-white/10">
+                                        <input type="radio" name="q2" class="radio radio-primary" />
+                                        <span class="text-white">Маълумотни ўқийди</span>
+                                    </label>
+                                    <label class="flex items-center gap-3 p-3 glass rounded-lg cursor-pointer hover:bg-white/10">
+                                        <input type="radio" name="q2" class="radio radio-primary" />
+                                        <span class="text-white">Файлни очади</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button onclick="checkQuiz()" class="btn btn-primary-custom text-white">
+                            <i data-lucide="check" class="w-4 h-4"></i>
+                            Текшириш
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Navigation -->
+                <div class="flex flex-col md:flex-row gap-4 justify-between" data-aos="fade-up">
+                    <!-- Previous Lesson -->
+                    {% if previous_lesson %}
+                        <a href="{% url 'lesson_view' course.slug previous_lesson.id %}" 
+                           class="btn glass text-white flex-1">
+                            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                            Олдинги дарс
+                        </a>
+                    {% else %}
+                        <div class="flex-1"></div>
+                    {% endif %}
+                    
+                    <!-- Complete Button -->
+                    <form method="POST" action="{% url 'complete_lesson' lesson.id %}" class="flex-1">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success text-white w-full">
+                            <i data-lucide="check-circle" class="w-5 h-5"></i>
+                            Тугатдим
+                        </button>
+                    </form>
+                    
+                    <!-- Next Lesson -->
+                    {% if next_lesson %}
+                        <a href="{% url 'lesson_view' course.slug next_lesson.id %}" 
+                           class="btn btn-primary-custom text-white flex-1">
+                            Кейинги дарс
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    {% else %}
+                        <div class="flex-1"></div>
+                    {% endif %}
+                </div>
+                
+                <!-- Notes Section -->
+                <div class="glass rounded-2xl p-6" data-aos="fade-up">
+                    <h3 class="text-xl font-bold text-white mb-4">
+                        <i data-lucide="message-square" class="w-5 h-5 inline mr-2"></i>
+                        Эслатмалар
+                    </h3>
+                    
+                    <textarea 
+                        class="textarea textarea-bordered w-full h-32 glass text-white"
+                        placeholder="Бу дарс ҳақида эслатмаларингизни ёзинг..."
+                    ></textarea>
+                    
+                    <button class="btn btn-primary-custom text-white mt-4">
+                        <i data-lucide="save" class="w-4 h-4"></i>
+                        Сақлаш
+                    </button>
+                </div>
+                
+            </div>
+            
+        </div>
+        
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Code Editor Functions
+    function runCode() {
+        const code = document.getElementById('code-editor').value;
+        const output = document.getElementById('code-output');
+        
+        // Муваққат: симуляция
+        output.textContent = 'Код бажарилмоқда...\n\n' + 
+                           '>>> ' + code + '\n\n' +
+                           'Муваққат: Код редактор ишланмоқда.\n' +
+                           'Кейинроқ Python интерпретатор уланади.';
+    }
+    
+    function resetCode() {
+        document.getElementById('code-editor').value = '';
+        document.getElementById('code-output').textContent = '';
+    }
+    
+    // Quiz Functions
+    function checkQuiz() {
+        alert('Квиз текширилди! Натижа: 2/2 тўғри ✅\n\nБу функция кейинроқ тўлдирилади.');
+    }
+</script>
+{% endblock %}

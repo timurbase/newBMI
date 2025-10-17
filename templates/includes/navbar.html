@@ -1,0 +1,59 @@
+<nav class="glass sticky top-0 z-50">
+    <div class="container mx-auto px-4">
+        <div class="navbar">
+            <div class="navbar-start">
+                <a href="{% url 'home' %}" class="btn btn-ghost text-xl">
+                    <span class="gradient-text font-bold">Kelajak</span>
+                    <span class="text-white">Dasturchilari</span>
+                </a>
+            </div>
+
+            <div class="navbar-center hidden lg:flex">
+                <ul class="menu menu-horizontal px-1 text-white">
+                    <li><a href="{% url 'home' %}">Бош саҳифа</a></li>
+                    <li><a href="{% url 'course_list' %}">Курслар</a></li>
+                    <li><a href="#about">Биз ҳақимизда</a></li>
+                    <li><a href="#mentors">Менторлар</a></li>
+                    <li><a href="#contact">Алоқа</a></li>
+                </ul>
+            </div>
+
+            <div class="navbar-end gap-2">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="btn btn-ghost text-white">
+                        <i data-lucide="layout-dashboard"></i>
+                        Dashboard
+                    </a>
+                    <a href="{% url 'profile' %}" class="btn btn-ghost text-white">
+                        <i data-lucide="user"></i>
+                        Профиль
+                    </a>
+                    <a href="{% url 'logout' %}" class="btn btn-outline btn-error">
+                        Чиқиш
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-ghost text-white">
+                        Кириш
+                    </a>
+                    <a href="{% url 'register' %}" class="btn btn-primary-custom text-white">
+                        Рўйхатдан ўтиш
+                    </a>
+                {% endif %}
+
+                <!-- Mobile menu -->
+                <div class="dropdown dropdown-end lg:hidden">
+                    <label tabindex="0" class="btn btn-ghost text-white">
+                        <i data-lucide="menu"></i>
+                    </label>
+                    <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow glass rounded-box w-52">
+                        <li><a href="{% url 'home' %}">Бош саҳифа</a></li>
+                        <li><a href="{% url 'course_list' %}">Курслар</a></li>
+                        <li><a href="#about">Биз ҳақимизда</a></li>
+                        <li><a href="#mentors">Менторлар</a></li>
+                        <li><a href="#contact">Алоқа</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

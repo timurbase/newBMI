@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+
+{% block title %}Профиль - Kelajak Dasturchilari{% endblock %}
+
+{% block content %}
+
+<section class="min-h-screen px-4 py-20">
+    <div class="container mx-auto max-w-6xl">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Sidebar -->
+            <div class="space-y-6">
+                
+                <!-- Profile Card -->
+                <div class="glass rounded-2xl p-6 text-center" data-aos="fade-up">
+                    <!-- Avatar -->
+                    <div class="avatar placeholder mb-4">
+                        <div class="w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 to-purple-500">
+                            {% if user.avatar %}
+                                <img src="{{ user.avatar.url }}" alt="{{ user.username }}" />
+                            {% else %}
+                                <span class="text-5xl text-white">{{ user.first_name.0 }}{{ user.last_name.0 }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Name -->
+                    <h2 class="text-2xl font-bold text-white mb-1">{{ user.first_name }} {{ user.last_name }}</h2>
+                    <p class="text-gray-400 mb-4">@{{ user.username }}</p>
+                    
+                    <!-- Level Badge -->
+                    <div class="badge badge-lg badge-primary mb-4">
+                        Level {{ user.level }}
+                    </div>
+                    
+                    <!-- XP Progress -->
+                  <div class="mb-4">
+    <div class="flex justify-between text-sm text-gray-400 mb-2">
+        <span>{{ user.xp }} XP</span>
+        <span>{{ next_level_xp }} XP</span>
+    </div>
+    <progress class="progress progress-primary w-full" value="{{ user.xp }}" max="{{ next_level_xp }}"></progress>
+</div>
+                    
+                    <!-- Stats -->
+                    <div class="grid grid-cols-3 gap-3 text-center">
+                        <div>
+                            <div class="text-2xl font-bold gradient-text">{{ user.current_streak }}</div>
+                            <div class="text-xs text-gray-400">Стрик 🔥</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold gradient-text">{{ enrolled_courses_count }}</div>
+                            <div class="text-xs text-gray-400">Курслар</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold gradient-text">{{ user_badges.count }}</div>
+                            <div class="text-xs text-gray-400">Баджлар</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Menu -->
+                <div class="glass rounded-2xl p-4" data-aos="fade-up">
+                    <ul class="menu text-white">
+                        <li>
+                            <a class="active">
+                                <i data-lucide="user" class="w-5 h-5"></i>
+                                Умумий маълумот
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <i data-lucide="lock" class="w-5 h-5"></i>
+                                Хавфсизлик
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <i data-lucide="bell" class="w-5 h-5"></i>
+                                Билдиришномалар
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <i data-lucide="credit-card" class="w-5 h-5"></i>
+                                Тўлов усуллари
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+            </div>
+            
+            <!-- Main Content -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Edit Profile -->
+                <div class="glass rounded-2xl p-8" data-aos="fade-up">
+                    <h2 class="text-2xl font-bold text-white mb-6">Профильни таҳрирлаш</h2>
+                    
+                    <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                        {% csrf_token %}
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- First Name -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text text-white">Исм</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    name="first_name"
+                                    value="{{ user.first_name }}"
+                                    class="input input-bordered glass text-white"
+                                />
+                            </div>
+                            
+                            <!-- Last Name -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text text-white">Фамилия</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    name="last_name"
+                                    value="{{ user.last_name }}"
+                                    class="input input-bordered glass text-white"
+                                />
+                            </div>
+                        </div>
+                        
+                        <!-- Email -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text text-white">Электрон почта</span>
+                            </label>
+                            <input 
+                                type="email" 
+                                name="email"
+                                value="{{ user.email }}"
+                                class="input input-bordered glass text-white"
+                            />
+                        </div>
+                        
+                        <!-- Phone -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text text-white">Телефон</span>
+                            </label>
+                            <input 
+                                type="tel" 
+                                name="phone"
+                                value="{{ user.phone }}"
+                                class="input input-bordered glass text-white"
+                            />
+                        </div>
+                        
+                        <!-- Bio -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text text-white">Ҳақингизда</span>
+                            </label>
+                            <textarea 
+                                name="bio"
+                                class="textarea textarea-bordered h-24 glass text-white"
+                                placeholder="Ўзингиз ҳақингизда қисқача..."
+                            >{{ user.bio }}</textarea>
+                        </div>
+                        
+                        <!-- Avatar Upload -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text text-white">Аватар</span>
+                            </label>
+                            <input 
+                                type="file" 
+                                name="avatar"
+                                accept="image/*"
+                                class="file-input file-input-bordered glass text-white w-full"
+                            />
+                        </div>
+                        
+                        <!-- Submit -->
+                        <button type="submit" class="btn btn-primary-custom text-white">
+                            <i data-lucide="save" class="w-5 h-5"></i>
+                            Сақлаш
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Achievements -->
+                <div class="glass rounded-2xl p-8" data-aos="fade-up">
+                    <h2 class="text-2xl font-bold text-white mb-6">Ютуқлар</h2>
+                    
+                    <div class="grid grid-cols-3 md:grid-cols-4 gap-4">
+                        {% if user_badges %}
+                            {% for user_badge in user_badges %}
+                            <div class="aspect-square glass rounded-xl flex flex-col items-center justify-center p-4 hover:scale-105 transition-all cursor-pointer">
+                                <div class="text-4xl mb-2">{{ user_badge.badge.icon }}</div>
+                                <div class="text-xs text-white text-center font-semibold">{{ user_badge.badge.name }}</div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="col-span-full text-center py-8">
+                                <p class="text-gray-400">Ҳали ютуқ йўқ. Дарслар ўтинг ва ютуқларга эришинг! 🏆</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Activity History -->
+                <div class="glass rounded-2xl p-8" data-aos="fade-up">
+                    <h2 class="text-2xl font-bold text-white mb-6">Охирги фаолият</h2>
+                    
+                    {% if recent_activities %}
+                        <div class="space-y-4">
+                            {% for activity in recent_activities %}
+                            <div class="flex items-start gap-4 p-4 glass rounded-lg">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="zap" class="w-5 h-5 text-white"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-white">{{ activity.reason }}</p>
+                                    <p class="text-sm text-gray-400">{{ activity.created_at|timesince }} олдин</p>
+                                </div>
+                                <div class="text-green-400 font-bold">+{{ activity.amount }} XP</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-gray-400 text-center py-8">Ҳали фаолият йўқ</p>
+                    {% endif %}
+                </div>
+                
+            </div>
+            
+        </div>
+        
+    </div>
+</section>
+
+{% endblock %}

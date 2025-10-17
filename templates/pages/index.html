@@ -1,0 +1,336 @@
+{% extends 'base.html' %}
+
+{% block title %}Kelajak Dasturchilari - Бош саҳифа{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
+    <!-- Animated background -->
+    <div class="absolute inset-0 opacity-20">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-blue-500 rounded-full filter blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-20 right-10 w-96 h-96 bg-green-500 rounded-full filter blur-3xl animate-pulse animation-delay-2000"></div>
+    </div>
+    
+    <div class="container mx-auto text-center relative z-10">
+        <div data-aos="fade-up">
+            <div class="badge badge-lg glass mb-4">
+                <i data-lucide="zap" class="w-4 h-4 mr-2"></i>
+                Ўзбекистоннинг №1 платформаси
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-black text-white mb-6">
+                Сизнинг <span class="gradient-text">кодлаш</span><br>
+                сафарингиз бу ерда бошланади
+            </h1>
+            
+            <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                AI менторлар, жонли дарслар ва геймификация билан дастурлашни ўрганинг. 
+                Кейинги авлод дастурчиларига қўшилинг!
+            </p>
+            
+            <!-- SHARTLI TUGMALAR -->
+            <div class="flex flex-wrap gap-4 justify-center">
+                {% if user.is_authenticated %}
+                    <!-- Logged in users uchun -->
+                    <a href="{% url 'dashboard' %}" class="btn btn-lg btn-primary-custom text-white glow">
+                        <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                        Dashboard'га ўтиш
+                    </a>
+                    <a href="{% url 'course_list' %}" class="btn btn-lg glass text-white">
+                        <i data-lucide="book-open" class="w-5 h-5"></i>
+                        Курсларга ўтиш
+                    </a>
+                {% else %}
+                    <!-- Guest users uchun -->
+                    <a href="{% url 'register' %}" class="btn btn-lg btn-primary-custom text-white glow">
+                        <i data-lucide="rocket" class="w-5 h-5"></i>
+                        Бепул бошлаш
+                    </a>
+                    <a href="{% url 'course_list' %}" class="btn btn-lg glass text-white">
+                        <i data-lucide="play-circle" class="w-5 h-5"></i>
+                        Курсларни кўриш
+                    </a>
+                {% endif %}
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 max-w-4xl mx-auto">
+                <div class="glass rounded-2xl p-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="text-3xl font-bold gradient-text">5000+</div>
+                    <div class="text-gray-400">Студентлар</div>
+                </div>
+                <div class="glass rounded-2xl p-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="text-3xl font-bold gradient-text">150+</div>
+                    <div class="text-gray-400">Дарслар</div>
+                </div>
+                <div class="glass rounded-2xl p-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="text-3xl font-bold gradient-text">50+</div>
+                    <div class="text-gray-400">Менторлар</div>
+                </div>
+                <div class="glass rounded-2xl p-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="text-3xl font-bold gradient-text">98%</div>
+                    <div class="text-gray-400">Рози</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="about" class="py-20 px-4">
+    <div class="container mx-auto">
+        <div class="text-center mb-16" data-aos="fade-up">
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
+                Нега <span class="gradient-text">Kelajak Dasturchilari</span>?
+            </h2>
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                Биз фақат дарс берадиган платформа эмасмиз - биз сизнинг карьера йўлингиздаги шериклармиз
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="glass rounded-2xl p-8 hover:scale-105 transition-all" data-aos="fade-up" data-aos-delay="100">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center mb-6">
+                    <i data-lucide="brain" class="w-8 h-8 text-white"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-4">AI Ментор 24/7</h3>
+                <p class="text-gray-400">
+                    Сунъий интеллект ёрдамчи доимо саволларингизга жавоб беради ва кодингизни текшириб беради
+                </p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="glass rounded-2xl p-8 hover:scale-105 transition-all" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center mb-6">
+                    <i data-lucide="code-2" class="w-8 h-8 text-white"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-4">Жонли Код Ёзиш</h3>
+                <p class="text-gray-400">
+                    Браузерингизда тўғридан-тўғри код ёзинг, хатоларни кўринг ва дарҳол натижани тестлашга қодир бўлинг
+                </p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="glass rounded-2xl p-8 hover:scale-105 transition-all" data-aos="fade-up" data-aos-delay="300">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 flex items-center justify-center mb-6">
+                    <i data-lucide="trophy" class="w-8 h-8 text-white"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-4">Геймификация</h3>
+                <p class="text-gray-400">
+                    Очколар, бажлар, рейтинглар - ўрганиш жараёнини қизиқарли ва мотивацияли қилинг
+                </p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="glass rounded-2xl p-8 hover:scale-105 transition-all" data-aos="fade-up" data-aos-delay="100">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-purple-500 to-violet-500 flex items-center justify-center mb-6">
+                    <i data-lucide="users" class="w-8 h-8 text-white"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-4">Жонли Менторлар</h3>
+                <p class="text-gray-400">
+                    Тажрибали дастурчилар сизнинг кодингизни кўриб чиқиб, масла холар бериб туради
+                </p>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="glass rounded-2xl p-8 hover:scale-105 transition-all" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 flex items-center justify-center mb-6">
+                    <i data-lucide="briefcase" class="w-8 h-8 text-white"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-4">Портфолио</h3>
+                <p class="text-gray-400">
+                    Хар бир талаба ўз лойихаларидан портфолио тузиб, иш берувчиларга кўрсатиши мумкин
+                </p>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="glass rounded-2xl p-8 hover:scale-105 transition-all" data-aos="fade-up" data-aos-delay="300">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-red-500 to-pink-500 flex items-center justify-center mb-6">
+                    <i data-lucide="award" class="w-8 h-8 text-white"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-4">Сертификатлар</h3>
+                <p class="text-gray-400">
+                    Модулларни тамомлаганингиздан кейин ишончли сертификатлар олинг
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Mentors Section - BAZADAN OLINADI -->
+<section id="mentors" class="py-20 px-4">
+    <div class="container mx-auto">
+        <div class="text-center mb-16" data-aos="fade-up">
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
+                Тажрибали <span class="gradient-text">менторлар</span>
+            </h2>
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                Ўзбекистоннинг энг яхши дастурчилари сизга ўргатади
+            </p>
+        </div>
+
+        {% if mentors %}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {% for mentor in mentors %}
+                <div class="glass rounded-2xl p-8 text-center hover:scale-105 transition-all" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00">
+                    <div class="avatar placeholder mb-6">
+                        <div class="w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 to-purple-500">
+                            {% if mentor.avatar %}
+                                <img src="{{ mentor.avatar.url }}" alt="{{ mentor.full_name }}" class="rounded-full w-full h-full object-cover" />
+                            {% else %}
+                                <span class="text-5xl text-white">{{ mentor.full_name.0 }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">{{ mentor.full_name }}</h3>
+                    <p class="text-blue-400 font-semibold mb-3">{{ mentor.position }}</p>
+                    <p class="text-gray-400 mb-4">{{ mentor.company }} • {{ mentor.years_experience }} йил тажриба</p>
+                    <div class="flex items-center justify-center gap-4 text-sm">
+                        <div>
+                            <div class="text-xl font-bold gradient-text">{{ mentor.students_count }}+</div>
+                            <div class="text-gray-400">Студентлар</div>
+                        </div>
+                        <div>
+                            <div class="text-xl font-bold gradient-text">{{ mentor.rating }}</div>
+                            <div class="text-gray-400">Рейтинг</div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Agar mentorlar yo'q bo'lsa -->
+            <div class="text-center py-12">
+                <p class="text-gray-400">Ҳозирча менторлар қўшилмаган. Админ панелдан менторларни қўшинг.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="py-20 px-4">
+    <div class="container mx-auto max-w-4xl">
+        <div class="glass rounded-3xl p-8 md:p-12" data-aos="fade-up">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                    Биз билан <span class="gradient-text">алоқага чиқинг</span>
+                </h2>
+                <p class="text-gray-400">Саволларингиз борми? Биз ёрдамга тайёрмиз!</p>
+            </div>
+
+            <form class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text text-white">Исмингиз</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4">
+                                <i data-lucide="user" class="w-5 h-5 text-gray-400"></i>
+                            </span>
+                            <input type="text" placeholder="Исм" class="input input-bordered w-full pl-12 glass text-white" required />
+                        </div>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text text-white">Email</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4">
+                                <i data-lucide="mail" class="w-5 h-5 text-gray-400"></i>
+                            </span>
+                            <input type="email" placeholder="email@example.com" class="input input-bordered w-full pl-12 glass text-white" required />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text text-white">Мавзу</span>
+                    </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4">
+                            <i data-lucide="tag" class="w-5 h-5 text-gray-400"></i>
+                        </span>
+                        <input type="text" placeholder="Хабар мавзуси" class="input input-bordered w-full pl-12 glass text-white" required />
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text text-white">Хабар</span>
+                    </label>
+                    <textarea class="textarea textarea-bordered h-32 glass text-white" placeholder="Хабарингизни ёзинг..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary-custom w-full text-white">
+                    <i data-lucide="send" class="w-5 h-5"></i>
+                    Юбориш
+                </button>
+            </form>
+
+            <!-- Contact Info -->
+            <div class="divider"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div>
+                    <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mx-auto mb-3">
+                        <i data-lucide="phone" class="w-6 h-6 text-blue-400"></i>
+                    </div>
+                    <p class="text-white font-semibold mb-1">Телефон</p>
+                    <p class="text-gray-400 text-sm">+998 90 123 45 67</p>
+                </div>
+
+                <div>
+                    <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-3">
+                        <i data-lucide="mail" class="w-6 h-6 text-green-400"></i>
+                    </div>
+                    <p class="text-white font-semibold mb-1">Email</p>
+                    <p class="text-gray-400 text-sm">info@kelajak.uz</p>
+                </div>
+
+                <div>
+                    <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mx-auto mb-3">
+                        <i data-lucide="map-pin" class="w-6 h-6 text-purple-400"></i>
+                    </div>
+                    <p class="text-white font-semibold mb-1">Манзил</p>
+                    <p class="text-gray-400 text-sm">Тошкент, Ўзбекистон</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 px-4">
+    <div class="container mx-auto">
+        <div class="glass rounded-3xl p-12 text-center relative overflow-hidden" data-aos="zoom-in">
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-green-600/20"></div>
+            <div class="relative z-10">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">
+                    Кутмагани бошланг! 🚀
+                </h2>
+                <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                    Биринчи дарс бепул - хозироқ рўйхатдан ўтинг ва дастурлаш оламига қадам қўйинг
+                </p>
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="btn btn-lg btn-primary-custom text-white glow">
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        Dashboard'га ўтиш
+                    </a>
+                {% else %}
+                    <a href="{% url 'register' %}" class="btn btn-lg btn-primary-custom text-white glow">
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        Бепул бошлаш
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

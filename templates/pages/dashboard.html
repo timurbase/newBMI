@@ -1,0 +1,371 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Kelajak Dasturchilari{% endblock %}
+
+{% block content %}
+
+<section class="min-h-screen px-4 py-20">
+    <div class="container mx-auto">
+
+        <!-- Header -->
+        <div class="mb-8" data-aos="fade-down">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-2">
+                Салом, {{ user.first_name }}! 👋
+            </h1>
+            <p class="text-gray-400">Бугун нималар қилмоқчисиз?</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <!-- Level Card -->
+            <div class="glass rounded-2xl p-6 hover:scale-105 transition-all" data-aos="fade-up" data-aos-delay="100">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center">
+                        <i data-lucide="star" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <span class="text-blue-400 font-semibold">Level</span>
+                </div>
+                <div class="text-3xl font-bold text-white mb-1">{{ user.level }}</div>
+                <div class="text-gray-400 text-sm">Сизнинг даражангиз</div>
+
+                <!-- Progress bar -->
+                <div class="mt-4">
+                    <div class="flex justify-between text-xs text-gray-400 mb-1">
+                        <span>{{ user.xp }} XP</span>
+                        <span>{{ next_level_xp }} XP</span>
+                    </div>
+                    <progress class="progress progress-primary w-full" value="{{ user.xp }}" max="{{ next_level_xp }}"></progress>
+                </div>
+            </div>
+
+            <!-- XP Card -->
+            <div class="glass rounded-2xl p-6 hover:scale-105 transition-all" data-aos="fade-up" data-aos-delay="200">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center">
+                        <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <span class="text-green-400 font-semibold">XP</span>
+                </div>
+                <div class="text-3xl font-bold text-white mb-1">{{ user.xp }}</div>
+                <div class="text-gray-400 text-sm">Жами очко</div>
+                <div class="text-green-400 text-sm mt-2">
+                    <i data-lucide="trending-up" class="w-4 h-4 inline"></i>
+                    +150 XP бугун
+                </div>
+            </div>
+
+            <!-- Streak Card -->
+            <div class="glass rounded-2xl p-6 hover:scale-105 transition-all" data-aos="fade-up" data-aos-delay="300">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center">
+                        <i data-lucide="flame" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <span class="text-orange-400 font-semibold">Стрик</span>
+                </div>
+                <div class="text-3xl font-bold text-white mb-1">{{ user.current_streak }} 🔥</div>
+                <div class="text-gray-400 text-sm">Кунлик стрик</div>
+                <div class="text-orange-400 text-sm mt-2">
+                    Рекорд: {{ user.longest_streak }} кун
+                </div>
+            </div>
+
+            <!-- Courses Card -->
+            <div class="glass rounded-2xl p-6 hover:scale-105 transition-all" data-aos="fade-up" data-aos-delay="400">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+                        <i data-lucide="book-open" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <span class="text-purple-400 font-semibold">Курслар</span>
+                </div>
+                <div class="text-3xl font-bold text-white mb-1">{{ enrolled_courses_count }}</div>
+                <div class="text-gray-400 text-sm">Актив курслар</div>
+                <div class="text-purple-400 text-sm mt-2">
+                    {{ completed_courses_count }} тугалланган
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Left Column - Continue Learning -->
+            <div class="lg:col-span-2 space-y-8">
+
+                <!-- Continue Learning -->
+                <div class="glass rounded-2xl p-6" data-aos="fade-up">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold text-white">Давом этиш</h2>
+                        <a href="#" class="text-blue-400 hover:text-blue-300">Ҳаммасини кўриш</a>
+                    </div>
+
+                    {% if active_courses %}
+                        <div class="space-y-4">
+                            {% for enrollment in active_courses %}
+                            <div class="glass rounded-xl p-4 hover:bg-white/10 transition-all cursor-pointer">
+                                <div class="flex items-center gap-4">
+                                    <!-- Course Image -->
+                                    <div class="w-20 h-20 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center flex-shrink-0">
+                                        {% if enrollment.course.thumbnail %}
+                                            <img src="{{ enrollment.course.thumbnail.url }}" alt="{{ enrollment.course.title }}" class="w-full h-full object-cover rounded-lg">
+                                        {% else %}
+                                            <i data-lucide="code" class="w-10 h-10 text-white"></i>
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- Course Info -->
+                                    <div class="flex-1">
+                                        <h3 class="text-white font-semibold mb-1">{{ enrollment.course.title }}</h3>
+                                        <div class="flex items-center gap-2 text-sm text-gray-400 mb-2">
+                                            <span>{{ enrollment.course.level|capfirst }}</span>
+                                            <span>•</span>
+                                            <span>{{ enrollment.course.duration_hours }} соат</span>
+                                        </div>
+
+                                        <!-- Progress -->
+                                        <div class="flex items-center gap-3">
+                                            <progress class="progress progress-primary flex-1" value="{{ enrollment.progress_percentage }}" max="100"></progress>
+                                            <span class="text-sm text-gray-400">{{ enrollment.progress_percentage|floatformat:0 }}%</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Action Button -->
+                                    <a href="#" class="btn btn-primary-custom btn-sm text-white">
+                                        Давом
+                                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-12">
+                            <div class="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center mx-auto mb-4">
+                                <i data-lucide="book-open" class="w-12 h-12 text-blue-400"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">Ҳали курс йўқ</h3>
+                            <p class="text-gray-400 mb-4">Дастурлашни ўрганишни бошлаш учун курсга ёзилинг</p>
+                            <a href="#" class="btn btn-primary-custom text-white">
+                                Курсларни кўриш
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Today's Tasks -->
+                <div class="glass rounded-2xl p-6" data-aos="fade-up">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold text-white">Бугунги вазифалар</h2>
+                        <div class="badge badge-primary">3 та</div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <!-- Task 1 -->
+                        <div class="flex items-center gap-3 p-3 glass rounded-lg hover:bg-white/10 transition-all">
+                            <input type="checkbox" class="checkbox checkbox-primary" checked />
+                            <div class="flex-1">
+                                <p class="text-white">Дарс 5: Python Functions</p>
+                                <p class="text-sm text-gray-400">Python Basics</p>
+                            </div>
+                            <div class="badge badge-success">+50 XP</div>
+                        </div>
+
+                        <!-- Task 2 -->
+                        <div class="flex items-center gap-3 p-3 glass rounded-lg hover:bg-white/10 transition-all">
+                            <input type="checkbox" class="checkbox checkbox-primary" />
+                            <div class="flex-1">
+                                <p class="text-white">Квиз: Loops and Conditionals</p>
+                                <p class="text-sm text-gray-400">Python Basics</p>
+                            </div>
+                            <div class="badge badge-warning">+100 XP</div>
+                        </div>
+
+                        <!-- Task 3 -->
+                        <div class="flex items-center gap-3 p-3 glass rounded-lg hover:bg-white/10 transition-all">
+                            <input type="checkbox" class="checkbox checkbox-primary" />
+                            <div class="flex-1">
+                                <p class="text-white">Лойиха: Calculator App</p>
+                                <p class="text-sm text-gray-400">Python Projects</p>
+                            </div>
+                            <div class="badge badge-error">+200 XP</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="glass rounded-2xl p-6" data-aos="fade-up">
+                    <h2 class="text-2xl font-bold text-white mb-6">Охирги фаолият</h2>
+
+                    <div class="space-y-4">
+                        {% if recent_activities %}
+                            {% for activity in recent_activities %}
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="check" class="w-5 h-5 text-white"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-white">{{ activity.description }}</p>
+                                    <p class="text-sm text-gray-400">{{ activity.created_at|timesince }} олдин</p>
+                                </div>
+                                <div class="text-green-400 font-semibold">+{{ activity.xp_earned }} XP</div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-gray-400 text-center py-8">Ҳали фаолият йўқ</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Sidebar -->
+            <div class="space-y-8">
+
+                <!-- Daily Challenge -->
+                <div class="glass rounded-2xl p-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center">
+                            <i data-lucide="trophy" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-white font-bold">Кунлик челлендж</h3>
+                            <p class="text-sm text-gray-400">Бугунги вазифа</p>
+                        </div>
+                    </div>
+
+                    <div class="p-4 glass rounded-lg mb-4">
+                        <h4 class="text-white font-semibold mb-2">FizzBuzz масаласини ечинг</h4>
+                        <p class="text-sm text-gray-400 mb-3">1 дан 100 гача рақамларни чиқаринг, 3 га бўлинадиганлар учун "Fizz", 5 га бўлинадиганлар учун "Buzz"</p>
+                        <div class="flex items-center justify-between">
+                            <div class="badge badge-warning">Ўрта</div>
+                            <div class="text-yellow-400 font-bold">+300 XP</div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary-custom w-full text-white">
+                        <i data-lucide="play" class="w-4 h-4"></i>
+                        Бошлаш
+                    </button>
+                </div>
+
+                <!-- Achievements -->
+                <div class="glass rounded-2xl p-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-white font-bold">Ютуқлар</h3>
+                        <a href="#" class="text-blue-400 text-sm hover:text-blue-300">Ҳаммаси</a>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-3">
+                        <!-- Badge 1 -->
+                        <div class="aspect-square glass rounded-xl flex flex-col items-center justify-center p-3 hover:scale-105 transition-all cursor-pointer">
+                            <div class="text-3xl mb-1">🥇</div>
+                            <div class="text-xs text-gray-400 text-center">Биринчи дарс</div>
+                        </div>
+
+                        <!-- Badge 2 -->
+                        <div class="aspect-square glass rounded-xl flex flex-col items-center justify-center p-3 hover:scale-105 transition-all cursor-pointer">
+                            <div class="text-3xl mb-1">🔥</div>
+                            <div class="text-xs text-gray-400 text-center">7 кунлик</div>
+                        </div>
+
+                        <!-- Badge 3 -->
+                        <div class="aspect-square glass rounded-xl flex flex-col items-center justify-center p-3 hover:scale-105 transition-all cursor-pointer opacity-50">
+                            <div class="text-3xl mb-1">🏆</div>
+                            <div class="text-xs text-gray-400 text-center">Курс тугатиш</div>
+                        </div>
+
+                        <!-- Badge 4 -->
+                        <div class="aspect-square glass rounded-xl flex flex-col items-center justify-center p-3 hover:scale-105 transition-all cursor-pointer">
+                            <div class="text-3xl mb-1">⚡</div>
+                            <div class="text-xs text-gray-400 text-center">Тез ечувчи</div>
+                        </div>
+
+                        <!-- Badge 5 -->
+                        <div class="aspect-square glass rounded-xl flex flex-col items-center justify-center p-3 hover:scale-105 transition-all cursor-pointer opacity-50">
+                            <div class="text-3xl mb-1">🎯</div>
+                            <div class="text-xs text-gray-400 text-center">100% точност</div>
+                        </div>
+
+                        <!-- Badge 6 -->
+                        <div class="aspect-square glass rounded-xl flex flex-col items-center justify-center p-3 hover:scale-105 transition-all cursor-pointer opacity-50">
+                            <div class="text-3xl mb-1">👑</div>
+                            <div class="text-xs text-gray-400 text-center">Топ 10</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leaderboard -->
+                <div class="glass rounded-2xl p-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-white font-bold">Лидерлар</h3>
+                        <a href="#" class="text-blue-400 text-sm hover:text-blue-300">Тўлиқ</a>
+                    </div>
+
+                    <div class="space-y-3">
+                        <!-- Leader 1 -->
+                        <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-all">
+                            <div class="text-2xl">🥇</div>
+                            <div class="avatar placeholder">
+                                <div class="w-10 rounded-full bg-gradient-to-br from-yellow-500 to-orange-500">
+                                    <span class="text-white text-sm">А</span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-white font-semibold text-sm">Алишер</p>
+                                <p class="text-xs text-gray-400">Level 15</p>
+                            </div>
+                            <div class="text-yellow-400 font-bold">8450 XP</div>
+                        </div>
+
+                        <!-- Leader 2 -->
+                        <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-all">
+                            <div class="text-2xl">🥈</div>
+                            <div class="avatar placeholder">
+                                <div class="w-10 rounded-full bg-gradient-to-br from-gray-400 to-gray-600">
+                                    <span class="text-white text-sm">Д</span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-white font-semibold text-sm">Дилшод</p>
+                                <p class="text-xs text-gray-400">Level 14</p>
+                            </div>
+                            <div class="text-gray-400 font-bold">7890 XP</div>
+                        </div>
+
+                        <!-- Leader 3 -->
+                        <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-all">
+                            <div class="text-2xl">🥉</div>
+                            <div class="avatar placeholder">
+                                <div class="w-10 rounded-full bg-gradient-to-br from-amber-600 to-orange-800">
+                                    <span class="text-white text-sm">М</span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-white font-semibold text-sm">Малика</p>
+                                <p class="text-xs text-gray-400">Level 13</p>
+                            </div>
+                            <div class="text-orange-400 font-bold">7200 XP</div>
+                        </div>
+
+                        <!-- Current User -->
+                        <div class="flex items-center gap-3 p-2 rounded-lg bg-blue-500/10 border border-blue-500/30">
+                            <div class="text-lg">🔹</div>
+                            <div class="avatar placeholder">
+                                <div class="w-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500">
+                                    <span class="text-white text-sm">{{ user.first_name.0 }}</span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-white font-semibold text-sm">{{ user.first_name }}</p>
+                                <p class="text-xs text-gray-400">Level {{ user.level }}</p>
+                            </div>
+                            <div class="text-blue-400 font-bold">{{ user.xp }} XP</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
