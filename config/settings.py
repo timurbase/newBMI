@@ -1,15 +1,19 @@
-# config/settings.py
-
 import os
 from pathlib import Path
+import dj_database_url  # Railway’da PostgreSQL uchun kerak
 
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-your-secret-key-here'  # Кейинчалик алмаштирамиз
+# Maxfiy kalit (Railway’da environment variable sifatida sozlanadi)
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-your-secret-key-here')
 
-DEBUG = True
+# DEBUG = False (deploy uchun)
+DEBUG = False
 
-ALLOWED_HOSTS = []
+# Railway domeni va umumiy xostlar
+ALLOWED_HOSTS = ['*']  # Dastlab * qo‘ying, keyin Railway domenini qo‘shasiz
+CSRF_TRUSTED_ORIGINS = ['https://*.up.railway.app']  # CSRF himoyasi uchun
 
 # Applications
 INSTALLED_APPS = [
@@ -19,8 +23,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
-    # Биз яратган апплар
     'users',
     'courses',
     'learning',
@@ -55,12 +57,15 @@ TEMPLATES = [
     },
 ]
 
-# Database
+# WSGI application
+WSGI_APPLICATION = 'config.wsgi.application'
+
+# Database (Railway’da PostgreSQL ishlatish uchun)
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
+        conn_max_age=600
+    )
 }
 
 # Static files
@@ -72,15 +77,16 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Тил ва вақт
+# Til va vaqt
 LANGUAGE_CODE = 'uz-uz'
 TIME_ZONE = 'Asia/Tashkent'
 USE_I18N = True
 USE_TZ = True
 
+# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Аутентификация
+# Authentication
 AUTH_USER_MODEL = 'users.User'  # Custom User model
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'

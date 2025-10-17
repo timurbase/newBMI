@@ -1,1 +1,1 @@
-web: gunicorn Kelajakdasturchilar.wsgi:application
+web: gunicorn BMI.wsgi:application --log-file -
